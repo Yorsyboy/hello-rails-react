@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
-  get 'static/index'
-  get 'greetings/index'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  namespace :api, defaults: { format: 'json' } do
+    resources :greetings, only: %i[index]
+  end
+  root 'static#index'
 
-  # Defines the root path route ("/")
-  # root "articles#index"
-  root 'greetings#index'
+  get '*page', to: 'static#index', constraints: ->(req) do
+    !req.xhr? && req.format.html?
+  end
 end
